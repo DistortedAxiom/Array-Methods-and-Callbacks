@@ -124,6 +124,8 @@ function getGoals(data) {
         }
     })
 
+    console.log(teams);
+
     let homeGoals = teams.reduce((count, item) => {
         let home = count.get(item.Team) || 0;
         count.set(item.Team, item.Goals + home);
@@ -161,6 +163,46 @@ function getGoals(data) {
 
     console.log(final_list);
 
+    var homeOccurances = teams.reduce(function(team, count) {
+        team[count.Team] = (team[count.Team] || 0) + 1;
+        return team;
+    }, {});
+
+    var awayOccurances = teams.reduce(function(team, count) {
+        team[count.awayTeam] = (team[count.awayTeam] || 0) + 1;
+        return team;
+    }, {});
+
+    var homeObject = Object.keys(homeOccurances).map(function(current) {
+        return {
+            Team: current,
+            Occurances: homeOccurances[current],
+        }
+    })
+
+    var awayObject = Object.keys(awayOccurances).map(function(current) {
+        return {
+            Team: current,
+            Occurances: awayOccurances[current],
+        }
+    })
+
+    var mergedOccurances = homeObject.concat(awayObject);
+
+    var final_occurances_obj = mergedOccurances.reduce(function(result, current) {
+        result[current.Team] = result[current.Team] || 0;
+        result[current.Team] += current.Occurances;
+        return result;
+    }, {});
+
+    var final_occurances = Object.keys(final_occurances_obj).map(function(current) {
+        return {
+            Team: current,
+            Occurances: final_occurances_obj[current],
+        }
+    })
+
+    console.log(final_occurances);
 
 }
 
